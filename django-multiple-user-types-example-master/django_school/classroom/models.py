@@ -6,7 +6,7 @@ from django.utils.html import escape, mark_safe
 class User(AbstractUser):
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
-
+    is_staf   = models.BooleanField(default=False)
 
 class Subject(models.Model):
     name = models.CharField(max_length=30)
@@ -63,6 +63,16 @@ class Student(models.Model):
     def __str__(self):
         return self.user.username
 
+# Define Teacher Model
+class Teacher(models.Model):
+    # Define the fileds
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+
+    
+# Define Staff Model
+class Staff(models.Model):
+    # Define the fields
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
 class TakenQuiz(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='taken_quizzes')
