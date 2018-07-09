@@ -57,12 +57,13 @@ class Answer(models.Model):
 
 class Student(models.Model):
     user         = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    name         = models.
-    session      = models.
-    year         = models
-    semeseter    = models.
-    department   = models.
-    reg_no       = models.
+    name         = models.CharField(max_length=100)
+    session_begin      = models.IntegerField(max_length=4)
+    session_end = models.IntegerField(max_length=2)
+    year = models.CharField(max_length=30)
+    semester = models.CharField(max_length=4)
+    department = models.CharField(max_length=40)
+    reg_no       = models.IntegerField(max_length=10)
     # quizzes = models.ManyToManyField(Quiz, through='TakenQuiz')
     # interests = models.ManyToManyField(Subject, related_name='interested_students')
 
