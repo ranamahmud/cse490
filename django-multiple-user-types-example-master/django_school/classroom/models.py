@@ -1,4 +1,6 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
+
 from django.db import models
 from django.utils.html import escape, mark_safe
 
@@ -11,7 +13,7 @@ class User(AbstractUser):
 class Course(models.Model):
     no = models.CharField(max_length=10)
     title = models.CharField(max_length=50)
-    credit = models.DecimalField max_digits=1, decimal_places=1)
+    credit = models.DecimalField(max_digits=1, decimal_places=1)
     year = models.CharField(max_length=30)
     semester = models.CharField(max_length=4)
     department = models.CharField(max_length=40)
@@ -29,7 +31,6 @@ class Subject(models.Model):
         html = '<span class="badge badge-primary" style="background-color: %s">%s</span>' % (color, name)
         return mark_safe(html)
 
-
 class Quiz(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quizzes')
     name = models.CharField(max_length=255)
@@ -37,6 +38,45 @@ class Quiz(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+# Define Teacher Model
+class Teacher(models.Model):
+    # Define the fileds
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    name = models.CharField(max_length=100)
+    designation = models.CharField(max_length=100)
+    department = models.CharField(max_length=100)
+    # current_courses = models.OneTo(Course, through='')
+    # past_course = models.OneToOneField(Course,)
+class Student(models.Model):
+    user         = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    name         = models.CharField(max_length=100, default="")
+    session_begin      =models.CharField(max_length=4,validators=[RegexValidator(r'^\d{1,10}$')],default="")
+    session_end = models.CharField(max_length=2,validators=[RegexValidator(r'^\d{1,10}$')],default="")
+    year = models.CharField(max_length=30,default="")
+    semester = models.CharField(max_length=4,default="")
+    department = models.CharField(max_length=40, default="")
+    reg_no       = models.CharField(max_length=10,validators=[RegexValidator(r'^\d{1,10}$')],default="")
+    quizzes = models.ManyToManyField(Quiz, through='TakenQuiz')
+    interests = models.ManyToManyField(Subject, related_name='interested_students')
+
+    # def get_unanswered_questions(self, quiz):
+    #     answered_questions = self.quiz_answers \
+    #         .filter(answer__question__quiz=quiz) \
+    #         .values_list('answer__question__pk', flat=True)
+    #     questions = quiz.questions.exclude(pk__in=answered_questions).order_by('text')
+    #     return questions
+
+    def __str__(self):
+        return self.user.username
+
+class Survey(models.Model):
+    # Related names had to be added
+    answered_by = models.ForeignKey(Student, on_delete=models.CASCADE)
+    asked_by = models.ForeignKey(Teacher,on_delete= models.CASCADE)
+    
 
 
 class Question(models.Model):
@@ -55,38 +95,6 @@ class Answer(models.Model):
     def __str__(self):
         return self.text
 
-
-class Student(models.Model):
-    user         = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    name         = models.CharField(max_length=100)
-    session_begin      = models.IntegerField(max_length=4)
-    session_end = models.IntegerField(max_length=2)
-    year = models.CharField(max_length=30)
-    semester = models.CharField(max_length=4)
-    department = models.CharField(max_length=40)
-    reg_no       = models.IntegerField(max_length=10)
-    # quizzes = models.ManyToManyField(Quiz, through='TakenQuiz')
-    # interests = models.ManyToManyField(Subject, related_name='interested_students')
-
-    # def get_unanswered_questions(self, quiz):
-    #     answered_questions = self.quiz_answers \
-    #         .filter(answer__question__quiz=quiz) \
-    #         .values_list('answer__question__pk', flat=True)
-    #     questions = quiz.questions.exclude(pk__in=answered_questions).order_by('text')
-    #     return questions
-
-    def __str__(self):
-        return self.user.username
-
-# Define Teacher Model
-class Teacher(models.Model):
-    # Define the fileds
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    name = models.CharField(max_length=100)
-    designation = models.CharField(max_length=100)
-    department = models.CharField(max_length=100)
-    # current_courses = models.OneTo(Course, through='')
-    # past_course = models.OneToOneField(Course,)
     
 # Define Staff Model
 class Staff(models.Model):
