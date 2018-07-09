@@ -13,6 +13,7 @@ urlpatterns = [
     ], 'classroom'), namespace='students')),
 
     path('teachers/', include(([
+        path('teacher_home', teachers.TeacherHomeView.as_view(), name='teacher_home_view'),
         path('', teachers.QuizListView.as_view(), name='quiz_change_list'),
         path('quiz/add/', teachers.QuizCreateView.as_view(), name='quiz_add'),
         path('quiz/<int:pk>/', teachers.QuizUpdateView.as_view(), name='quiz_change'),
