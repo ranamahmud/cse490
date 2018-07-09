@@ -15,6 +15,7 @@ class Course(models.Model):
     year = models.CharField(max_length=30)
     semester = models.CharField(max_length=4)
     department = models.CharField(max_length=40)
+    active = models.BooleanField(default=False)
 class Subject(models.Model):
     name = models.CharField(max_length=30)
     color = models.CharField(max_length=7, default='#007bff')
@@ -81,11 +82,11 @@ class Student(models.Model):
 class Teacher(models.Model):
     # Define the fileds
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    name =
-    designation =
-    department =
-    current_courses = 
-    past_course = 
+    name = models.CharField(max_length=100)
+    designation = models.CharField(max_length=100)
+    department = models.CharField(max_length=100)
+    # current_courses = models.OneTo(Course, through='')
+    # past_course = models.OneToOneField(Course,)
     
 # Define Staff Model
 class Staff(models.Model):
