@@ -6,8 +6,15 @@ from django.utils.html import escape, mark_safe
 class User(AbstractUser):
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
-    is_staf   = models.BooleanField(default=False)
+    is_staff   = models.BooleanField(default=False)
 
+class Course(models.Model):
+    no = models.CharField(max_length=10)
+    title = models.CharField(max_length=50)
+    credit = models.DecimalField max_digits=1, decimal_places=1)
+    year = models.CharField(max_length=30)
+    semester = models.CharField(max_length=4)
+    department = models.CharField(max_length=40)
 class Subject(models.Model):
     name = models.CharField(max_length=30)
     color = models.CharField(max_length=7, default='#007bff')
@@ -49,16 +56,22 @@ class Answer(models.Model):
 
 
 class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    quizzes = models.ManyToManyField(Quiz, through='TakenQuiz')
-    interests = models.ManyToManyField(Subject, related_name='interested_students')
+    user         = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    name         = models.
+    session      = models.
+    year         = models
+    semeseter    = models.
+    department   = models.
+    reg_no       = models.
+    # quizzes = models.ManyToManyField(Quiz, through='TakenQuiz')
+    # interests = models.ManyToManyField(Subject, related_name='interested_students')
 
-    def get_unanswered_questions(self, quiz):
-        answered_questions = self.quiz_answers \
-            .filter(answer__question__quiz=quiz) \
-            .values_list('answer__question__pk', flat=True)
-        questions = quiz.questions.exclude(pk__in=answered_questions).order_by('text')
-        return questions
+    # def get_unanswered_questions(self, quiz):
+    #     answered_questions = self.quiz_answers \
+    #         .filter(answer__question__quiz=quiz) \
+    #         .values_list('answer__question__pk', flat=True)
+    #     questions = quiz.questions.exclude(pk__in=answered_questions).order_by('text')
+    #     return questions
 
     def __str__(self):
         return self.user.username
@@ -67,12 +80,18 @@ class Student(models.Model):
 class Teacher(models.Model):
     # Define the fileds
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-
+    name =
+    designation =
+    department =
+    current_courses = 
+    past_course = 
     
 # Define Staff Model
 class Staff(models.Model):
     # Define the fields
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    name = models.CharField(max_length = 100)
+    department = models.CharField(max_length = 30)
 
 class TakenQuiz(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='taken_quizzes')
