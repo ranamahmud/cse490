@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from .views import classroom, students, teachers
+from .views import classroom, students, teachers,staffs
 
 urlpatterns = [
     path('', classroom.home, name='home'),
