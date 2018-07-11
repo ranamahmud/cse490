@@ -47,7 +47,7 @@ class StudentHomeView(ListView):
     model = Quiz
     ordering = ('name', )
     context_object_name = 'quizzes'
-    template_name = 'classroom/students/quiz_list.html'
+    template_name = 'classroom/students/student_home.html'
 
     def get_queryset(self):
         student = self.request.user.student
